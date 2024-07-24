@@ -3,12 +3,10 @@
 #include <string.h>
 
 void getNome(char nome[]){
-	//substitua por seu nome
 	strncpy(nome, "Eloisa Nielsen", MAX_CHAR_NOME);
-	nome[MAX_CHAR_NOME-1] = '\0';//adicionada terminação manual para caso de overflow
+	nome[MAX_CHAR_NOME-1] = '\0';
 }
 
-//a função a seguir deve retornar o seu número de GRR
 unsigned int getGRR(){
 	return 20221226;
 }
@@ -20,12 +18,14 @@ void Troca(int v[], int a, int b){
 }
 
 void IgualaVetores(int v[], int u[], int a, int b){
-    for(int i=0; i<=b-a; i++){
+    int i;
+    for(i=0; i<=b-a; i++){
         v[i+a] = u[i];
     }
 }
 
 int BS(int x, int v[], int a, int b, int* numComparacoes){
+    (*numComparacoes)++;
 	if (a > b || x > v[b])
 		return -1;
     (*numComparacoes)++;
@@ -40,7 +40,7 @@ int buscaSequencial(int vetor[], int tam, int valor, int* numComparacoes){
 
 int BN(int x, int v[], int a, int b, int* numComparacoes){
 	if (a > b)
-		return a-1;
+		return -1;
 	int m = (a + b)/ 2 ;
     (*numComparacoes)++;
 	if (x == v[m])
@@ -55,14 +55,24 @@ int buscaBinaria(int vetor[], int tam, int valor, int* numComparacoes){
 	return BN(valor, vetor, 0, tam-1, numComparacoes);
 }
 
+int BNinsere(int x, int v[], int a, int b, int* numComparacoes){
+	if (a > b)
+		return a-1;
+	int m = (a + b)/ 2 ;
+    (*numComparacoes)++;
+	if (x < v[m]){
+		return BNinsere(x, v, a, m-1, numComparacoes);
+    }
+	return BNinsere(x, v, m+1, b, numComparacoes);
+}
+
 void Insere(int v[], int a, int b, int* numComparacoes){
-	int p = buscaBinaria( v, b-a+1, v[b], numComparacoes);
+	int p = BNinsere(v[b], v, a, b-1, numComparacoes);
 	int i = b;
 	while(i > p + 1){
 		Troca(v, i, i-1);
 		i--;
 	}
-	return;
 }
 
 void Ordenai(int v[], int a, int b, int* numComparacoes){
@@ -70,7 +80,6 @@ void Ordenai(int v[], int a, int b, int* numComparacoes){
 		return;
 	Ordenai(v, a, b-1, numComparacoes);
 	Insere(v, a, b, numComparacoes);
-	return;
 }
 
 int insertionSort(int vetor[], int tam){    
@@ -92,7 +101,7 @@ void OrdenaS(int v[], int a, int b, int* numComparacoes){
 	if (a >= b)
 		return;
 	Troca(v, a, Minimo(v, a, b, numComparacoes));
-	return OrdenaS(v, a+1, b, numComparacoes);
+	OrdenaS(v, a+1, b, numComparacoes);
 }
 
 int selectionSort(int vetor[], int tam){
@@ -130,7 +139,7 @@ void OrdenaM(int v[], int a, int b, int* numComparacoes){
 	int m = (a+b)/2;
 	OrdenaM(v, a, m,  numComparacoes);
 	OrdenaM(v, m+1, b,  numComparacoes);
-	return Intercala(v, a, m, b, numComparacoes);
+	Intercala(v, a, m, b, numComparacoes);
 }
 
 int mergeSort(int vetor[], int tam){
@@ -141,13 +150,10 @@ int mergeSort(int vetor[], int tam){
 
 int Part(int v[], int a, int b, int x, int* numComparacoes){
     int m = a-1;
-    int i;
-    for(i=a; i<=b; i++){
+    for(int i=a; i<=b; i++){
     (*numComparacoes)++;
-        if(v[i] <=x){
-            m++;
-            Troca(v, m, i);
-        }
+        if(v[i] <= x)
+            Troca(v, ++m, i);
     }
     return m;
 }
@@ -156,8 +162,8 @@ void Quick(int v[], int a, int b, int* numComparacoes){
     if (a >= b)
         return;
     int m = Part(v, a, b, v[b], numComparacoes);
-    return Quick(v, a, m-1, numComparacoes);
-    return Quick(v, m+1, b, numComparacoes);
+    Quick(v, a, m-1, numComparacoes);
+    Quick(v, m+1, b, numComparacoes);
 }
 
 int quickSort(int vetor[], int tam){

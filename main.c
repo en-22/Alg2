@@ -15,13 +15,16 @@ void Vetor_Crescente(int v[], int tam){
 }
 
 void Vetor_Decrescente(int v[], int tam){
-    for(int i = tam - 1; i>=0; i--)
-        v[i] = i;
+    int x = 0;
+    for(int i = tam - 1; i>=0; i--){
+        v[i] = x;
+        x++;
+    }
 }
 
 void Vetor_Aleatorio(int v[], int tam){
     for(int i = 0; i<tam; i++)
-        v[i] = rand();
+        v[i] = rand()%1000;
 }
 
 void Calcula_Tempo_e_Comp_cresc(int v[], int tam){//Calcula o tempo e o numComp de todos os algortimos para um mesmo vetor
@@ -36,7 +39,7 @@ void Calcula_Tempo_e_Comp_cresc(int v[], int tam){//Calcula o tempo e o numComp 
     printf("Insertion \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
-    
+
     start = clock();
 	numComp= mergeSort(v, tam);
 	end = clock();
@@ -83,7 +86,8 @@ void Calcula_Tempo_e_Comp_decresc(int v[], int tam){//Calcula o tempo e o numCom
     printf("Insertion \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
-    
+       
+
     Vetor_Decrescente(v, tam);
     start = clock();
 	numComp= mergeSort(v, tam);
@@ -119,114 +123,189 @@ void Calcula_Tempo_e_Comp_decresc(int v[], int tam){//Calcula o tempo e o numCom
     printf("Heap \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+
+    Vetor_Decrescente(v, tam);
 }
 
-void Calcula_Tempo_e_Comp_aleat(int v[], int vaux[], int tam, unsigned int mc[], double mt[]){//Calcula o tempo e o numComp de todos os algortimos para um mesmo vetor
+void Calcula_Tempo_e_Comp_aleat(int v[], int vaux[], int tam, double t[], unsigned int c[]){//Calcula o tempo e o numComp de todos os algortimos para um mesmo vetor
     clock_t start, end;
     double total;
 	int numComp;
 
 	start = clock();
-	numComp= insertionSort(v, tam);
+	numComp = insertionSort(v, tam);
 	end = clock();
 	total = ((double)end - start)/CLOCKS_PER_SEC;
-    mc[0]+=numComp;
-    mt[0]+=total;
     printf("Insertion \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+    t[0]=t[0]+total;
+    c[0]=c[0]+numComp;
     
+
     Igualar_Vetores(v, vaux, tam);
     start = clock();
 	numComp= mergeSort(v, tam);
 	end = clock();
 	total = ((double)end - start)/CLOCKS_PER_SEC;
-    mc[1]+=numComp;
-    mt[1]+=total;
     printf("Merge \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+    t[1]=t[1]+total;
+    c[1]=c[1]+numComp;
     
+
     Igualar_Vetores(v, vaux, tam);
     start = clock();
 	numComp= selectionSort(v, tam);
 	end = clock();
 	total = ((double)end - start)/CLOCKS_PER_SEC;
-    mc[2]+=numComp;
-    mt[2]+=total;
     printf("Selection \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+    t[2]=t[2]+total;
+    c[2]=c[2]+numComp;
     
+
     Igualar_Vetores(v, vaux, tam);
 	start = clock();
 	numComp= quickSort(v, tam);
 	end = clock();
 	total = ((double)end - start)/CLOCKS_PER_SEC;
-    mc[3]+=numComp;
-    mt[3]+=total;
     printf("Quick \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+    t[3]=t[3]+total;
+    c[3]=c[3]+numComp;
     
+
     Igualar_Vetores(v, vaux, tam);
 	start = clock();
 	numComp= heapSort(v, tam);
 	end = clock();
 	total = ((double)end - start)/CLOCKS_PER_SEC;
-    mc[4]+=numComp;
-    mt[4]+=total;
     printf("Heap \n");
 	printf("Tempo total: %f \n", total);
     printf("numcomp: %d \n", numComp);
+    t[4]=t[4]+total;
+    c[4]=c[4]+numComp;
+    
+    Igualar_Vetores(v, vaux, tam);
+
 }
 
-void Imprime_media(unsigned int mc[], double mt[]){
-    printf("\nMédia dos Aleatórios \n");
-    
-    double total = mt[0]/3;
-    unsigned int numComp = mc[0]/3;
+void Print_Organizado(int v[], int vaux[], int tam){//Imprime o vetor aleatório. Cada algoritmo o organiza e o imprime organizado.
+    printf("Vetor de tamanho %d:\n", tam);
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
+
+	insertionSort(v, tam);
     printf("Insertion \n");
-	printf("Tempo total: %f \n", total);
-    printf("numcomp: %d \n", numComp);
-    
-    total = mt[1]/3;
-    numComp = mc[1]/3;
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
+
+    Igualar_Vetores(v, vaux, tam);
+	mergeSort(v, tam);
     printf("Merge \n");
-	printf("Tempo total: %f \n", total);
-    printf("numcomp: %d \n", numComp);
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
 
-    total = mt[2]/3;
-    numComp = mc[2]/3;
+    Igualar_Vetores(v, vaux, tam);
+	selectionSort(v, tam);
     printf("Selection \n");
-	printf("Tempo total: %f \n", total);
-    printf("numcomp: %d \n", numComp);
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
 
-    total = mt[3]/3;
-    numComp = mc[3]/3;
+    Igualar_Vetores(v, vaux, tam);
+	quickSort(v, tam);
     printf("Quick \n");
-	printf("Tempo total: %f \n", total);
-    printf("numcomp: %d \n", numComp);
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
 
-    total = mt[4]/3;
-    numComp = mc[4]/3;
+    Igualar_Vetores(v, vaux, tam);
+	heapSort(v, tam);
     printf("Heap \n");
-	printf("Tempo total: %f \n", total);
-    printf("numcomp: %d \n", numComp);
+    for(int i = 0; i<tam; i++)
+        printf("%d ", v[i]);
+    printf("\n");
+
+    Igualar_Vetores(v, vaux, tam);
 }
+
+void Testar_Buscas(int v[], int tam){
+    int i = 999;
+    clock_t start, end;
+    double total;
+	int numComp = 0;
+    int index;
+
+    printf("Vetores de tamanho: %d \n", tam);
+
+    start = clock();
+    index = buscaBinaria(v, tam, i, &numComp);
+	end = clock();
+	total = ((double)end - start)/CLOCKS_PER_SEC;
+    printf("Busca Binária: \n");
+    printf("Index de %d: %d \n", i, index);
+	printf("Tempo total: %f \n", total);
+    printf("Comparações: %d \n", numComp);
+    printf("\n");
+    numComp = 0;
+
+    start = clock();
+    index = buscaSequencial(v, tam, i, &numComp);
+	end = clock();
+	total = ((double)end - start)/CLOCKS_PER_SEC;
+    printf("Busca Sequencial: \n");   
+    printf("Index de %d: %d \n", i, index);
+	printf("Tempo total: %f \n", total);
+    printf("Comparações: %d \n", numComp);
+    printf("\n");
+    numComp = 0;
+
+    i = 50000;
+
+    start = clock();
+    index = buscaBinaria(v, tam, i, &numComp);
+	end = clock();
+	total = ((double)end - start)/CLOCKS_PER_SEC;
+    printf("Busca Binária: \n");
+    printf("Index de %d: %d \n", i, index);
+	printf("Tempo total: %f \n", total);
+    printf("Comparações: %d \n", numComp);
+    printf("\n");
+    numComp = 0;
+
+    start = clock();
+    index = buscaSequencial(v, tam, i, &numComp);
+	end = clock();
+	total = ((double)end - start)/CLOCKS_PER_SEC;
+    printf("Busca Sequencial: \n");  
+    printf("Index de %d: %d \n", i, index);
+	printf("Tempo total: %f \n", total);
+    printf("Comparações: %d \n", numComp);
+    printf("\n");
+}
+
+void ResetaCompTemp(unsigned int c[], double t[]){
+    for(int i = 0; i<5; i++)
+        c[i] = 0;
+    for(int i = 0; i<5; i++)
+        t[i] = 0;
+}
+
 
 int main(){
 	char nome[MAX_CHAR_NOME];
-	int tamVetor = 25000;
-    unsigned int media_comparacoes_aleat[5];// 0=Insertion 1=Merge 2=Selection 3=Quick 4=Heap
-    for(int i = 0; i<5; i++){
-        media_comparacoes_aleat[i] = 0;
-    }
-    double media_tempo_aleat[5];
-    for(int i = 0; i<5; i++){
-        media_tempo_aleat[i] = 0;
-    }
+	int tamVetor = 10;
     srand(time(NULL));
+    unsigned int Comp[5] = {0,0,0,0,0};//guarda a soma do número de comparações dos vetores aleatórios para cada algortimo
+    double Temp[5] = {0,0,0,0,0};//guarda a soma do tempo dos vetores aleatórios para cada algortimo
 
 	int* vetor_crescente = malloc(tamVetor * sizeof(int));
 	if(vetor_crescente == NULL){
@@ -288,59 +367,70 @@ int main(){
 	printf("Trabalho de %s\n", nome);
 	printf("GRR %u\n", getGRR());
 
-    printf("vetores tam= 1000 \n");
-    printf("vetor_crescente \n");
-    Calcula_Tempo_e_Comp_cresc(vetor_crescente, 1000);
-    printf("\nvetor_decrescente \n");
-    Calcula_Tempo_e_Comp_decresc(vetor_crescente, 1000);
-    printf("\nvetor_aleatorio1 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, 1000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio2 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, 1000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio3\n");
-    Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, 1000, media_comparacoes_aleat, media_tempo_aleat);
-    Imprime_media(media_comparacoes_aleat, media_tempo_aleat);
     
-    printf("vetores tam= 5000 \n");
-    printf("vetor_crescente \n");
-    Calcula_Tempo_e_Comp_cresc(vetor_crescente, 5000);
-    printf("\nvetor_decrescente \n");
-    Calcula_Tempo_e_Comp_decresc(vetor_crescente, 5000);
-    printf("\nvetor_aleatorio1 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, 5000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio2 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, 5000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio3\n");
-    Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, 5000, media_comparacoes_aleat, media_tempo_aleat);
-    Imprime_media(media_comparacoes_aleat, media_tempo_aleat);
+    Print_Organizado(vetor_b, vetor_b_aux, 20);
 
-    printf("vetores tam= 10000 \n");
-    printf("vetor_crescente \n");
-    Calcula_Tempo_e_Comp_cresc(vetor_crescente, 10000);
-    printf("\nvetor_decrescente \n");
-    Calcula_Tempo_e_Comp_decresc(vetor_crescente, 10000);
-    printf("\nvetor_aleatorio1 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, 10000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio2 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, 10000, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio3\n");
-    Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, 10000, media_comparacoes_aleat, media_tempo_aleat);
-    Imprime_media(media_comparacoes_aleat, media_tempo_aleat);
+    for(int i = 1000; i <= tamVetor; i=i*5){
+        printf("Vetores de tamanho: %d \n", i);
+        printf("Vetor crescente \n");
+        Calcula_Tempo_e_Comp_cresc(vetor_crescente, i);
+        printf("\nVetor decrescente \n");
+        Calcula_Tempo_e_Comp_decresc(vetor_decrescente, i);
+        printf("\nVetor aleatorio 1 \n");
+        Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, i, Temp, Comp);
+        printf("\nVetor aleatorio 2 \n");
+        Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, i, Temp, Comp);
+        printf("\nVetor aleatorio 3 \n");
+        Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, i, Temp, Comp);
+        printf("\nMédia numComp aleatórios:\n");
+        printf("Insertion: %d \n", Comp[0]/3);
+        printf("Merge: %d \n", Comp[1]/3);
+        printf("Selection: %d \n", Comp[2]/3);
+        printf("Quick: %d \n", Comp[3]/3);
+        printf("Heap: %d \n", Comp[4]/3);
+        printf("\n");
+        printf("Média Tempo aleatórios:\n");
+        printf("Insertion: %f \n", Temp[0]/3);
+        printf("Merge: %f \n", Temp[1]/3);
+        printf("Selection: %f \n", Temp[2]/3);
+        printf("Quick: %f \n", Temp[3]/3);
+        printf("Heap: %f \n", Temp[4]/3);
+        printf("\n\n");
+        ResetaCompTemp(Comp, Temp);
+    }
 
-    printf("vetores tam= 25000 \n");
-    printf("vetor_crescente \n");
+    printf("Vetores de tamanho: %d \n", tamVetor);
+    printf("Vetor crescente \n");
     Calcula_Tempo_e_Comp_cresc(vetor_crescente, tamVetor);
-    printf("\nvetor_decrescente \n");
-    Calcula_Tempo_e_Comp_decresc(vetor_crescente, tamVetor);
-    printf("\nvetor_aleatorio1 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, tamVetor, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio2 \n");
-    Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, tamVetor, media_comparacoes_aleat, media_tempo_aleat);
-    printf("\nvetor_aleatorio3\n");
-    Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, tamVetor, media_comparacoes_aleat, media_tempo_aleat);
+    printf("\nVetor decrescente \n");
+    Calcula_Tempo_e_Comp_decresc(vetor_decrescente, tamVetor);
+    printf("\nVetor aleatorio 1 \n");
+    Calcula_Tempo_e_Comp_aleat(vetor_a, vetor_a_aux, tamVetor, Temp, Comp);
+    printf("\nVetor aleatorio 2 \n");
+    Calcula_Tempo_e_Comp_aleat(vetor_b, vetor_b_aux, tamVetor, Temp, Comp);
+    printf("\nVetor aleatorio 3 \n");
+    Calcula_Tempo_e_Comp_aleat(vetor_c, vetor_c_aux, tamVetor, Temp, Comp);
+    printf("\n");
+    printf("Média numComp aleatórios:\n");
+    printf("Insertion: %d \n", Comp[0]/3);
+    printf("Merge: %d \n", Comp[1]/3);
+    printf("Selection: %d \n", Comp[2]/3);
+    printf("Quick: %d \n", Comp[3]/3);
+    printf("Heap: %d \n", Comp[4]/3);
+    printf("\n");
+    printf("Média Tempo aleatórios:\n");
+    printf("Insertion: %f \n", Temp[0]/3);
+    printf("Merge: %f \n", Temp[1]/3);
+    printf("Selection: %f \n", Temp[2]/3);
+    printf("Quick: %f \n", Temp[3]/3);
+    printf("Heap: %f \n", Temp[4]/3);
+    printf("\n\n");
+    
+    Testar_Buscas(vetor_crescente, 1000);
+    Testar_Buscas(vetor_crescente, 5000);
+    Testar_Buscas(vetor_crescente, 25000);
+    Testar_Buscas(vetor_crescente, tamVetor);
 
-    Imprime_media(media_comparacoes_aleat, media_tempo_aleat);
-   
 	free(vetor_crescente);
     free(vetor_decrescente);
     free(vetor_a_aux);
